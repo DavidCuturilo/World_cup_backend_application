@@ -1,5 +1,5 @@
 #env
-world_cup_backend/.env
+.env
 
 # compiled output
 /dist
