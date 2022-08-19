@@ -15,7 +15,6 @@ export class AuthService {
 
   async registerUser(registerUserDto: RegisterUserRequestDto) {
     const hashedPassword = await encodePassword(registerUserDto.password);
-    console.log(hashedPassword);
     const userData: RegisterUserRequestDto = {
       name: registerUserDto.name,
       lastName: registerUserDto.lastName,

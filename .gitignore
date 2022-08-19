@@ -1,6 +1,9 @@
 #env
 .env
 
+#swagger-spec
+swagger-spec.json
+
 # compiled output
 /dist
 /node_modules

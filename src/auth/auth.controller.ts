@@ -1,3 +1,7 @@
+import {
+  SwaggerRegisterUserResponseDto,
+  SwaggerLoginUserResponseDto,
+} from './../interceptors/dto/internal-response-model.dto';
 import { AuthenticatedGuard } from './../guards/authenticated.guard';
 import { LocalAuthGuard } from './../guards/local.guard';
 import { LoginUserRequestDto } from './dto/login-user.request.dto';
@@ -14,17 +18,21 @@ import {
 import { RegisterUserRequestDto } from './dto/register-user.request.dto';
 import { TransformInterceptor } from 'src/interceptors/transform.interceptor';
 import { Request } from 'express';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth routes')
 @UseInterceptors(TransformInterceptor)
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiResponse({ status: 201, type: SwaggerRegisterUserResponseDto })
   @Post('registerUser')
   async registerUser(@Body() registerUserDto: RegisterUserRequestDto) {
     return this.authService.registerUser(registerUserDto);
   }
 
+  @ApiResponse({ status: 200, type: SwaggerLoginUserResponseDto })
   @UseGuards(LocalAuthGuard)
   @Post('loginUser')
   async loginUser(@Body() loginUserDto: LoginUserRequestDto) {
