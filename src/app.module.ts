@@ -1,3 +1,4 @@
+import { HttpModule } from '@nestjs/axios';
 import { Session } from './entities/session.entity';
 import { LoggerMiddleware } from './middleware/logger-middleware';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
@@ -12,6 +13,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { configService } from './config/config.service';
 import { DataSource } from 'typeorm';
+import { WorldCupModule } from './services/world-cup/world-cup.module';
 
 @Module({
   imports: [
@@ -19,6 +21,11 @@ import { DataSource } from 'typeorm';
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
     AuthModule,
     WebappModule,
+    WorldCupModule,
+    HttpModule.register({
+      timeout: 5000,
+      maxRedirects: 5,
+    }),
   ],
   controllers: [AppController, AuthController],
   providers: [AppService, AuthService, WorldCupService],
