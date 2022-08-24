@@ -71,6 +71,7 @@ async function bootstrap() {
 
   SwaggerModule.setup('api', app, devSwaggerDocument);
 
+  app.enableCors();
   await app.listen(configService.getPort());
   logger.log(
     `Application is successfully running on port: ${configService.getPort()} 🔥🔥🔥`,

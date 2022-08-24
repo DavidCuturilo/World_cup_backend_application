@@ -1,6 +1,6 @@
 import { LoginUserRequestDto } from './dto/login-user.request.dto';
 import { RegisterUserRequestDto } from './dto/register-user.request.dto';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/entities/user.entity';
@@ -15,14 +15,30 @@ export class AuthService {
 
   async registerUser(registerUserDto: RegisterUserRequestDto) {
     const hashedPassword = await encodePassword(registerUserDto.password);
+    const userExist = this.userRepository.findOne({
+      where: { username: registerUserDto.username },
+    });
+
+    if (userExist) {
+      throw new HttpException('Bad Request', HttpStatus.NOT_ACCEPTABLE);
+    }
+
     const userData: RegisterUserRequestDto = {
       name: registerUserDto.name,
-      lastName: registerUserDto.lastName,
+      lastname: registerUserDto.lastname,
       username: registerUserDto.username,
       password: hashedPassword,
     };
     const user = await this.userRepository.save(userData);
-    if (user) return 'User successfully registered';
+    if (user) {
+      console.log('User successfully registered');
+      return {
+        id: user.id,
+        name: user.name,
+        lastname: user.lastname,
+        username: user.username,
+      };
+    }
     return 'Error in registration process';
   }
 
@@ -38,7 +54,7 @@ export class AuthService {
         return {
           id: user.id,
           name: user.name,
-          lastName: user.lastName,
+          lastname: user.lastname,
           username: user.username,
         };
       } else {

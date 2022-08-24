@@ -7,7 +7,7 @@ export class RegisterUserRequestDto {
 
   @IsDefined()
   @IsString()
-  lastName: string;
+  lastname: string;
 
   @IsDefined()
   @IsString()
