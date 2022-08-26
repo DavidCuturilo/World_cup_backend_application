@@ -2,7 +2,7 @@ export class GetStandingsResponseDto {
   standings: StandingsInfo[];
 }
 
-class StandingsInfo {
+export class StandingsInfo {
   tournament: {
     name: string;
   };
@@ -31,5 +31,6 @@ class TableStandings {
 class TeamInfo {
   name: string;
   shortName: string;
+  nameCode: string;
   ranking: number;
 }
