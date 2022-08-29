@@ -8,6 +8,7 @@ class MatchesInfo {
   };
   roundInfo: {
     round: number;
+    slug?: string;
   };
   customId: string;
   status: MatchStatus;
@@ -31,6 +32,7 @@ class Team {
   shortName: string;
   userCode: string;
   ranking: number;
+  nameCode: string;
   teamColors: TeamColors;
 }
 

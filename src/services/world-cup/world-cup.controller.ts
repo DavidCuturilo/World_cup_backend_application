@@ -3,7 +3,7 @@ import {
   SwaggerMatchesByRoundResponseDto,
 } from './../../interceptors/dto/internal-response-model.dto';
 import { WorldCupService } from './world-cup.service';
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('World cup routes')
@@ -22,8 +22,12 @@ export class WorldCupController {
     name: 'round',
     description: 'Searched round',
   })
-  @Get('matchesByRound/:round')
-  async getMatchesByRound(@Param('round') round: number) {
-    return await this.worldCupService.getMatchesByRound(round);
+  @Get('matchesByRound')
+  async getMatchesByRound(@Query() query: { round: string; slugName: string }) {
+    console.log(JSON.stringify(query));
+    return await this.worldCupService.getMatchesByRound(
+      query.round,
+      query.slugName,
+    );
   }
 }
