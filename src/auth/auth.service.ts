@@ -1,3 +1,4 @@
+import { configService } from 'src/config/config.service';
 import { LoginUserRequestDto } from './dto/login-user.request.dto';
 import { RegisterUserRequestDto } from './dto/register-user.request.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
@@ -5,17 +6,19 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/entities/user.entity';
 import { comparePassword, encodePassword } from 'src/utils/bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private jwtService: JwtService,
   ) {}
 
   async registerUser(registerUserDto: RegisterUserRequestDto) {
     const hashedPassword = await encodePassword(registerUserDto.password);
-    const userExist = this.userRepository.findOne({
+    const userExist = await this.userRepository.findOne({
       where: { username: registerUserDto.username },
     });
 
@@ -32,11 +35,19 @@ export class AuthService {
     const user = await this.userRepository.save(userData);
     if (user) {
       console.log('User successfully registered');
-      return {
-        id: user.id,
+      const payload = {
+        sub: user.id,
+        username: user.username,
         name: user.name,
         lastname: user.lastname,
-        username: user.username,
+      };
+      const access_token = this.jwtService.sign(payload, {
+        secret: configService.getValue('JWT_SECRET'),
+        expiresIn: '1h',
+      });
+      return {
+        access_token: access_token,
+        expiresIn: 3600,
       };
     }
     return 'Error in registration process';
@@ -51,11 +62,19 @@ export class AuthService {
       const matched = comparePassword(password, user.password);
       if (matched) {
         console.log('Successfully logged in user.');
-        return {
-          id: user.id,
+        const payload = {
+          sub: user.id,
+          username: user.username,
           name: user.name,
           lastname: user.lastname,
-          username: user.username,
+        };
+        const access_token = this.jwtService.sign(payload, {
+          secret: configService.getValue('JWT_SECRET'),
+          expiresIn: '1h',
+        });
+        return {
+          access_token: access_token,
+          expiresIn: 3600,
         };
       } else {
         console.log('Passwords do not match.');

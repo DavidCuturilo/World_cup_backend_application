@@ -1,3 +1,4 @@
+import { JwtModule } from '@nestjs/jwt';
 import { HttpModule } from '@nestjs/axios';
 import { Session } from './entities/session.entity';
 import { LoggerMiddleware } from './middleware/logger-middleware';
@@ -26,6 +27,7 @@ import { WorldCupModule } from './services/world-cup/world-cup.module';
       timeout: 5000,
       maxRedirects: 5,
     }),
+    JwtModule,
   ],
   controllers: [AppController, AuthController],
   providers: [AppService, AuthService, WorldCupService],

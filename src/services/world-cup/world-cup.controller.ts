@@ -1,13 +1,15 @@
+import { JwtAuthGuard } from './../../auth/jwt-auth.guard';
 import {
   SwaggerStandingsResponseDto,
   SwaggerMatchesByRoundResponseDto,
 } from './../../interceptors/dto/internal-response-model.dto';
 import { WorldCupService } from './world-cup.service';
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('World cup routes')
 @Controller('world-cup')
+@UseGuards(JwtAuthGuard)
 export class WorldCupController {
   constructor(private readonly worldCupService: WorldCupService) {}
 

@@ -1,8 +1,8 @@
+import { JwtAuthGuard } from './jwt-auth.guard';
 import {
   SwaggerRegisterUserResponseDto,
   SwaggerLoginUserResponseDto,
 } from './../interceptors/dto/internal-response-model.dto';
-import { AuthenticatedGuard } from './../guards/authenticated.guard';
 import { LocalAuthGuard } from './../guards/local.guard';
 import { LoginUserRequestDto } from './dto/login-user.request.dto';
 import { AuthService } from './auth.service';
@@ -39,7 +39,7 @@ export class AuthController {
     return this.authService.loginUser(loginUserDto);
   }
 
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('status')
   async getAuthStatus(@Req() req: Request) {
     return req.user;
