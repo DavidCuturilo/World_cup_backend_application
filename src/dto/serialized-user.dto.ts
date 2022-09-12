@@ -5,6 +5,7 @@ export class SerializedUser {
   name: string;
   lastname: string;
   username: string;
+  points: number;
 
   @Exclude()
   password: string;

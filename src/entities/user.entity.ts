@@ -1,8 +1,12 @@
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Generated, OneToMany, PrimaryColumn } from 'typeorm';
+import { Prediction } from './prediction.entity';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
+  @Column({
+    unique: true,
+  })
+  @Generated('increment')
   id: number;
 
   @PrimaryColumn()
@@ -16,4 +20,12 @@ export class User {
 
   @Column()
   lastname: string;
+
+  @Column({ nullable: true, default: 0 })
+  points: number;
+
+  @OneToMany(() => Prediction, (prediction) => prediction.user, {
+    cascade: ['update', 'insert', 'remove'],
+  })
+  predictions!: Prediction[];
 }
