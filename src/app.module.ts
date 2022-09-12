@@ -18,6 +18,7 @@ import { configService } from './config/config.service';
 import { DataSource } from 'typeorm';
 import { WorldCupModule } from './services/world-cup/world-cup.module';
 import { Match } from './entities/match.entity';
+import { HelpersService } from './helpers/helpers.service';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { Match } from './entities/match.entity';
     JwtModule,
   ],
   controllers: [AppController, AuthController],
-  providers: [AppService, AuthService, WorldCupService],
+  providers: [AppService, AuthService, WorldCupService, HelpersService],
 })
 export class AppModule implements NestModule {
   constructor(private dataSource: DataSource) {}

@@ -1596,8 +1596,7 @@ export class WorldCupService {
   }
 
   async getMatchesByRound(round: string, slugName: string) {
-    console.log('Round: ' + round);
-    console.log('Slug name: ' + slugName);
+    console.log('Round: ' + round + ' slug: ' + slugName);
     // let response;
 
     // if (slugName != 'group-faze') {
