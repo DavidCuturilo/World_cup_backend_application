@@ -1,3 +1,4 @@
+import { Prediction } from './../entities/prediction.entity';
 import { User } from 'src/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
@@ -11,7 +12,7 @@ import { WebappService } from './webapp.service';
       timeout: 5000,
       maxRedirects: 5,
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Prediction]),
   ],
   controllers: [WebappController],
   providers: [WebappService],

@@ -1,13 +1,25 @@
+import { Match } from './../../entities/match.entity';
+import { MatchDto } from './../../dto/match.dto';
+import { NationalTeamRequestDto } from './../../dto/national-team.request.dto';
+import { NationalTeam } from './../../entities/national-team.entity';
 // import { GetStandingsResponseDto } from './dto/get-standings.response.dto';
 // import { GetMatchesByRoundResponseDto } from './dto/get-matches-by-round.response.dto';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 // import { lastValueFrom } from 'rxjs';
 // import { configService } from 'src/config/config.service';
 
 @Injectable()
 export class WorldCupService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    @InjectRepository(NationalTeam)
+    private readonly nationalTeamRepository: Repository<NationalTeam>,
+    @InjectRepository(Match)
+    private readonly matchRepository: Repository<Match>,
+  ) {}
 
   async getStandings() {
     // const response = await lastValueFrom(
@@ -1573,6 +1585,13 @@ export class WorldCupService {
         },
       ],
     };
+
+    try {
+      this.insertNationalTeams(response);
+    } catch (error) {
+      console.log('Error while inserting nationalTeams, error: ' + error);
+    }
+
     return response;
   }
 
@@ -3317,6 +3336,52 @@ export class WorldCupService {
       ],
       hasNextPage: false,
     };
+
+    try {
+      this.insertMatches(response.events);
+    } catch (error) {
+      console.log('Error inserting matches, error: ' + error);
+    }
+
     return response;
+  }
+
+  private insertNationalTeams(data) {
+    let nationalTeam: NationalTeamRequestDto;
+
+    for (const group of data.standings) {
+      for (const teamInfo of group.rows) {
+        nationalTeam = {
+          name: teamInfo.team.name,
+          group: group.name,
+          standingsPosition: teamInfo.position,
+          matchesPlayed: teamInfo.matches,
+          wins: teamInfo.wins,
+          draws: teamInfo.draws,
+          losses: teamInfo.losses,
+          points: teamInfo.points,
+        };
+
+        this.nationalTeamRepository.save(nationalTeam);
+      }
+    }
+  }
+
+  private insertMatches(events) {
+    let match: MatchDto;
+    for (const event of events) {
+      match = {
+        id: event.customId,
+        round: event.roundInfo.round,
+        status: event.status.description,
+        winner_code: event.winnerCode,
+        homeTeam: event.homeTeam,
+        awayTeam: event.awayTeam,
+        home_score: event.homeScore.current,
+        away_score: event.awayScore.current,
+      };
+
+      this.matchRepository.save(match);
+    }
   }
 }

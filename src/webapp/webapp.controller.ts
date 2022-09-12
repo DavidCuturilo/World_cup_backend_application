@@ -1,3 +1,4 @@
+import { SavePredictionRequestDto } from './dto/save-prediction.request.dto';
 import { JwtAuthGuard } from './../auth/jwt-auth.guard';
 import { WebappService } from './webapp.service';
 import {
@@ -6,6 +7,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -24,13 +26,20 @@ export class WebappController {
     return await this.webappService.getScoreboard();
   }
 
-  @Post('savePredictions')
-  async savePredictionsForUser(@Body() savePredictionsForUser: any) {
-    this.webappService.savePredictionsForUser(savePredictionsForUser);
+  @Post('savePrediction')
+  async savePredictionForUser(
+    @Body() savePrediction: SavePredictionRequestDto,
+  ) {
+    return this.webappService.savePrediction(savePrediction);
   }
 
-  @Get('allPredictionsForUser/:id')
-  async getAllPredictionsForUser(@Param('id') id: number) {
-    this.webappService.getAllPredictionsForUser(id);
+  @Get('allPredictions/:id')
+  async getAllPredictions(@Param('id') id: number) {
+    return this.webappService.getAllPredictions(id);
+  }
+
+  @Get('prediction')
+  async getPrediction(@Query() query: { user_id: number; match_id: string }) {
+    return this.webappService.getPrediction(query.user_id, query.match_id);
   }
 }

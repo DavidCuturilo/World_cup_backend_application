@@ -1,3 +1,5 @@
+import { Prediction } from './entities/prediction.entity';
+import { NationalTeam } from './entities/national-team.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { HttpModule } from '@nestjs/axios';
 import { Session } from './entities/session.entity';
@@ -15,10 +17,11 @@ import { User } from './entities/user.entity';
 import { configService } from './config/config.service';
 import { DataSource } from 'typeorm';
 import { WorldCupModule } from './services/world-cup/world-cup.module';
+import { Match } from './entities/match.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Session]),
+    TypeOrmModule.forFeature([User, Session, NationalTeam, Match, Prediction]),
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
     AuthModule,
     WebappModule,
