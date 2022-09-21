@@ -1,3 +1,4 @@
+import { WorldCupAuthGuard } from './../guards/auth.guard';
 import { SavePredictionRequestDto } from './dto/save-prediction.request.dto';
 import { JwtAuthGuard } from './../auth/jwt-auth.guard';
 import { WebappService } from './webapp.service';
@@ -18,6 +19,7 @@ import { ApiTags } from '@nestjs/swagger';
 @UseInterceptors(TransformInterceptor)
 @Controller('webapp')
 @UseGuards(JwtAuthGuard)
+@UseGuards(WorldCupAuthGuard)
 export class WebappController {
   constructor(private readonly webappService: WebappService) {}
 

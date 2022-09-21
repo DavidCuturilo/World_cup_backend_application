@@ -4,15 +4,14 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
+import { configService } from 'src/config/config.service';
 
 @Injectable()
-export class RapidAuthGuard implements CanActivate {
-  logger = new Logger('RapidAuthGuard');
+export class WorldCupAuthGuard implements CanActivate {
+  logger = new Logger('WorldCupAuthGuard');
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-    const token = request.headers['rapid-api-key'];
-    console.log('Token: ' + token);
-    return true;
-    //   return token === configService.getValue('RAPID_API_KEY');
+    const token = request.headers['world_cup_api_key'];
+    return token === configService.getValue('WORLD_CUP_API_KEY');
   }
 }

@@ -1,3 +1,4 @@
+import { WorldCupAuthGuard } from './../guards/auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import {
   SwaggerRegisterUserResponseDto,
@@ -23,6 +24,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 @ApiTags('Auth routes')
 @UseInterceptors(TransformInterceptor)
 @Controller('auth')
+@UseGuards(WorldCupAuthGuard)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

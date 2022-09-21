@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Match } from 'src/entities/match.entity';
 import { Prediction } from 'src/entities/prediction.entity';
+import { MatchStatus } from 'src/enums/match-status.enum';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -15,6 +16,10 @@ export class HelpersService {
     const match = await this.matchRepository.findOne({
       where: { id: prediction.match_id },
     });
+
+    if (match.status === MatchStatus.NOT_STARTED) {
+      return 0;
+    }
 
     const homeScore = match.homeScore;
     const awayScore = match.awayScore;
